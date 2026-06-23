@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reno Category Opportunity Analysis — Spectrum Reach</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2430; --line:#2d3441;
+    --text:#e6edf3; --muted:#9aa7b4; --accent:#1d9bf0;
+    --p1:#ff5c5c; --p2:#ffb83d; --p3:#5fd38d; --spectrum:#0073e6;
+    --grow-hot:#ff5c5c; --grow-warm:#ffb83d; --grow-steady:#5fd38d;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.55}
+  header{padding:28px 32px 18px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#121922,#0d1117)}
+  h1{margin:0 0 4px;font-size:24px;letter-spacing:-.3px}
+  .sub{color:var(--muted);font-size:13px;max-width:1000px}
+  .wrap{padding:24px 32px;max-width:1280px;margin:0 auto}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:8px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .kpi .n{font-size:24px;font-weight:700}
+  .kpi .l{font-size:12px;color:var(--muted);margin-top:2px}
+  .kpi.hot .n{color:var(--grow-hot)} .kpi.warm .n{color:var(--grow-warm)} .kpi.steady .n{color:var(--grow-steady)}
+  .ksrc{font-size:10px;color:#6b7785;margin-top:6px}
+  h2{font-size:16px;margin:34px 0 12px;border-left:3px solid var(--accent);padding-left:10px}
+  .intro{font-size:13.5px;color:var(--text);background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:16px 18px;margin-bottom:8px}
+  .intro b{color:#5cb3ff}
+  .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0 16px}
+  .bar label{font-size:12px;color:var(--muted);margin-right:2px}
+  select,input[type=text]{background:var(--panel2);color:var(--text);border:1px solid var(--line);
+    border-radius:8px;padding:8px 10px;font-size:13px}
+  .legend{font-size:12px;color:var(--muted);margin:4px 0 14px}
+  .legend span{display:inline-block;margin-right:16px}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:middle}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:14px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:0;overflow:hidden;
+    border-top:4px solid var(--line);transition:transform .1s;display:flex;flex-direction:column}
+  .card:hover{transform:translateY(-2px)}
+  .card.p-1{border-top-color:var(--p1)} .card.p-2{border-top-color:var(--p2)} .card.p-3{border-top-color:var(--p3)}
+  .card .hd{padding:15px 16px 6px}
+  .card .ic{font-size:20px}
+  .card h3{margin:4px 0 0;font-size:16px;display:flex;align-items:center;gap:8px;justify-content:space-between}
+  .rankpill{font-size:11px;font-weight:700;background:var(--panel2);border:1px solid var(--line);
+    border-radius:20px;padding:2px 9px;color:var(--muted)}
+  .card.p-1 .rankpill{color:var(--p1);border-color:rgba(255,92,92,.4)}
+  .card.p-2 .rankpill{color:var(--p2);border-color:rgba(255,184,61,.4)}
+  .card.p-3 .rankpill{color:var(--p3);border-color:rgba(95,211,141,.4)}
+  .serves{font-size:12px;color:var(--muted);padding:2px 16px 10px}
+  .metrics{display:flex;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--panel2)}
+  .metric{flex:1;padding:10px 12px;border-right:1px solid var(--line)}
+  .metric:last-child{border-right:none}
+  .metric .ml{font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+  .metric .mv{font-size:15px;font-weight:700;margin-top:2px}
+  .gtag{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;margin-top:4px}
+  .gtag.hot{background:rgba(255,92,92,.15);color:var(--grow-hot)}
+  .gtag.warm{background:rgba(255,184,61,.15);color:var(--grow-warm)}
+  .gtag.steady{background:rgba(95,211,141,.15);color:var(--grow-steady)}
+  .body{padding:12px 16px 16px;font-size:12.5px}
+  .body .lab{font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin:10px 0 4px;font-weight:600}
+  .subs{display:flex;flex-wrap:wrap;gap:5px}
+  .sub-chip{font-size:11px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:3px 7px}
+  .sub-chip.star{border-color:rgba(255,184,61,.5);color:var(--grow-warm)}
+  .reno{font-size:12px;color:var(--text)}
+  .reno b{color:#5cb3ff;font-weight:600}
+  .take{font-size:12.5px;color:var(--text);background:rgba(0,115,230,.08);border:1px solid rgba(0,115,230,.3);
+    border-radius:8px;padding:9px 11px;margin-top:12px}
+  .flag{color:var(--p2);font-weight:600}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  .tbl{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:8px}
+  .tbl th,.tbl td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  .tbl th{background:var(--panel2);font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+  .tbl tr:last-child td{border-bottom:none}
+  .tbl td.r{font-weight:700}
+  details{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+  summary{cursor:pointer;font-weight:600;font-size:14px}
+  details .dc{font-size:12.5px;color:var(--text);margin-top:10px}
+  details .dc li{margin-bottom:7px}
+  .note{font-size:12px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);
+    border-radius:10px;padding:12px 14px;margin-top:8px}
+  a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+  .srclist{font-size:11.5px;color:var(--muted);columns:2;column-gap:28px}
+  .srclist a{display:inline}
+  .srclist p{margin:0 0 8px;break-inside:avoid}
+  footer{padding:20px 32px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);margin-top:30px}
+  @media(max-width:680px){.srclist{columns:1}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Reno, NV — Category Opportunity Analysis</h1>
+  <div class="sub">Spectrum Reach · Market Research &amp; Insights · the seven advertising verticals through a Reno DMA (#103) lens · sizing &amp; growth from <b>national local-advertising</b> benchmarks (DMA-level category spend is proprietary &amp; not public) · public sources only · v1 · 2026-06-23</div>
+</header>
+
+<div class="wrap">
+
+  <div class="intro">
+    <b>How to read this.</b> The seven categories below are ranked as <b>go-to-market priorities for Reno</b> by combining three things: (1) <b>size</b> — how much money the vertical puts into local advertising, (2) <b>growth</b> — how fast that spend is rising, especially in streaming/CTV where Spectrum Reach competes, and (3) <b>Reno fit</b> — how concentrated the advertiser base is in this specific market. Each card lists the fastest-growing <b>sub-categories</b> (⭐ = the "dive-deeper" candidates, the way <i>gaming</i> was flagged last year). <span class="flag">Important data caveat:</span> no public dataset breaks out ad spend by category for a single DMA (your own Heatmap methodology documents this — Borrell/BIA/Kantar are paid and county-level at finest). Every dollar figure here is a <b>U.S. local-advertising benchmark used as a directional proxy</b>; growth direction is reliable, exact Reno levels are not. Items to confirm before the July 28 deck are <span class="flag">flagged</span>.
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="n">$184.5B</div><div class="l">Total U.S. local ad spend, 2026 forecast</div><div class="ksrc">BIA Advisory, Apr 2026 · +8.1% YoY</div></div>
+    <div class="kpi hot"><div class="n">Travel</div><div class="l">Fastest-growing ad industry — 3 yrs running</div><div class="ksrc">eMarketer · Reno's signature vertical</div></div>
+    <div class="kpi warm"><div class="n">+241%</div><div class="l">Legal CTV ad-spend growth in 2025</div><div class="ksrc">Taqtics — steepest channel shift of the 7</div></div>
+    <div class="kpi steady"><div class="n">$10.7B</div><div class="l">U.S. local <i>automotive</i> ad spend, 2026</div><div class="ksrc">BIA/Innovid · ~⅔ now digital</div></div>
+    <div class="kpi"><div class="n">7</div><div class="l">Categories analyzed (+ gaming sub)</div><div class="ksrc">auto · edu · finance · health · home · travel · legal</div></div>
+  </div>
+
+  <h2>Priority ranking — where the GTM refresh should aim first</h2>
+  <div class="tbl">
+    <table>
+      <tr><th>#</th><th>Category</th><th>Size (local ad $)</th><th>Growth signal</th><th>Reno fit</th><th>Why it ranks here</th></tr>
+      <tr><td class="r" style="color:var(--p1)">1</td><td><b>Travel &amp; Tourism</b><br><span style="color:var(--muted);font-size:11px">incl. ⭐ gaming/casinos</span></td><td>Large &amp; rising — US travel digital ad $8.77B (2025)</td><td><span style="color:var(--grow-hot)">▲ Hot</span> — fastest-growing industry 3 yrs; casino tourism 5.4% CAGR</td><td><span style="color:var(--grow-hot)">Highest</span></td><td>National momentum meets Reno's core economy: 49% of visitors stay in casino hotels; record airport traffic. This is the "gaming" thesis, validated.</td></tr>
+      <tr><td class="r" style="color:var(--p1)">2</td><td><b>Healthcare</b></td><td>Very large — pharma+health digital $26.2B (2026)</td><td><span style="color:var(--grow-hot)">▲ Hot</span> — digital passes linear TV in 2026; CTV budgets +60%</td><td><span style="color:var(--grow-hot)">High</span></td><td>Renown Health is Reno's #1 employer; provider competition (Renown vs. Saint Mary's vs. Carson Tahoe) drives sustained local spend.</td></tr>
+      <tr><td class="r" style="color:var(--p1)">3</td><td><b>Automotive</b></td><td>Largest single local vertical — $10.7B (2026)</td><td><span style="color:var(--grow-warm)">▲ Warm</span> — auto CTV/OTT 7.9% CAGR; 86% of marketers raising CTV</td><td><span style="color:var(--grow-warm)">High</span></td><td>Dealer clusters (e.g., Dolan Auto Group) are the classic, reliable local-TV buyer; sales are hyper-local (50–80% within 5–10 mi) — built for addressable.</td></tr>
+      <tr><td class="r" style="color:var(--p2)">4</td><td><b>Legal Services</b></td><td>Top local-<i>TV</i> vertical — $1.7B on local TV (2025)</td><td><span style="color:var(--grow-hot)">▲ Hot</span> — CTV ad spend +241% in 2025</td><td><span style="color:var(--grow-warm)">Medium</span></td><td>Steepest channel shift to CTV of any category; high per-advertiser budgets. Reno PI/injury firms are an under-mapped local opportunity.</td></tr>
+      <tr><td class="r" style="color:var(--p2)">5</td><td><b>Finance &amp; Insurance</b></td><td>Mid — fin+insurance ad $5.9B in H1 2025</td><td><span style="color:var(--grow-hot)">▲ Hot</span> — total spend +17.8% H1'25; banking +20%</td><td><span style="color:var(--grow-warm)">Medium</span></td><td>BIA-named growth vertical; local banks/credit unions (Nevada State Bank, Greater Nevada CU) + insurance agents fit local targeting.</td></tr>
+      <tr><td class="r" style="color:var(--p3)">6</td><td><b>Home Improvement</b></td><td>Large underlying market ($657B services), fragmented ad spend</td><td><span style="color:var(--grow-warm)">▲ Warm</span> — high-value leads; "near-me" demand rising</td><td><span style="color:var(--grow-steady)">Medium</span></td><td>Many small advertisers, high lead value (roofing/remodel $350–500 CPL). Volume play: lots of SMBs, each a modest but sticky buy.</td></tr>
+      <tr><td class="r" style="color:var(--p3)">7</td><td><b>Education</b></td><td>Smallest — ~$1.2B total US education ad spend</td><td><span style="color:var(--grow-steady)">● Steady/mixed</span> — overall growth stalled, but AVOD +233%</td><td><span style="color:var(--grow-steady)">Lower</span></td><td>Few but anchor advertisers (UNR, TMCC, WCSD). Defensive/niche — streaming-native formats are the only fast-growing slice.</td></tr>
+    </table>
+  </div>
+
+  <div class="bar">
+    <label>Sort by</label>
+    <select id="f-sort">
+      <option value="priority">GTM priority</option>
+      <option value="size">Size (largest first)</option>
+      <option value="growth">Growth (fastest first)</option>
+    </select>
+    <label>Filter growth</label>
+    <select id="f-grow">
+      <option value="">All</option>
+      <option value="hot">Hot</option>
+      <option value="warm">Warm</option>
+      <option value="steady">Steady</option>
+    </select>
+    <label>Search</label>
+    <input type="text" id="f-text" placeholder="category, sub-category, business…" style="flex:1;min-width:180px">
+  </div>
+
+  <div class="legend">
+    <span><i class="dot" style="background:var(--grow-hot)"></i>Hot growth</span>
+    <span><i class="dot" style="background:var(--grow-warm)"></i>Warm growth</span>
+    <span><i class="dot" style="background:var(--grow-steady)"></i>Steady / mixed</span>
+    <span>⭐ = dive-deeper sub-category</span>
+  </div>
+
+  <h2>Category cards</h2>
+  <div class="grid" id="grid"></div>
+
+  <h2>The "gaming" parallel — what to dive into this year</h2>
+  <details open>
+    <summary>Reading across the seven, the strongest "dive-deeper" candidates</summary>
+    <div class="dc">
+      <ul>
+        <li><b>⭐ Casino &amp; gaming-resort marketing (under Travel &amp; Tourism)</b> — the most defensible Reno-specific thesis. Casino tourism is a $61.4B→$103.9B market (5.4% CAGR to 2034), travel is the fastest-growing ad industry nationally, and Reno's economy is built on it (49% of visitors stay in casino hotels; Peppermill, Grand Sierra, Atlantis, Nugget, Caesars/Eldorado-Silver Legacy-Circus Circus are all major local advertisers). This is last year's "gaming" insight, now backed by category growth data. <span class="flag">VERIFY:</span> confirm current Reno casino ad-buying behavior and whether they buy local CTV vs. national/house media.</li>
+        <li><b>⭐ Legal — personal-injury &amp; mass-tort CTV</b> — legal CTV ad spend grew <b>+241% in 2025</b> and CTV now reportedly out-performs broadcast 4.5× for firms. High budgets per advertiser, and a category that has barely started its streaming migration (CTV still ~3% of legal impressions) — i.e., lots of runway. A high-growth, possibly under-served Reno segment.</li>
+        <li><b>⭐ Healthcare — Medicare Advantage, urgent care &amp; service-line marketing</b> — healthcare digital ad spend overtakes linear TV in 2026 with CTV budgets up ~60%; Reno's aging in-migration + Renown/Saint Mary's/Carson Tahoe rivalry make health-system and Medicare-season campaigns a recurring, high-value local buy.</li>
+        <li><b>⭐ Finance — credit unions &amp; insurance agents</b> — financial-services local ad spend is growing faster (+17.8% H1'25) than almost any vertical; "bank near me" searches +60%. Reno's regional banks/CUs and insurance offices are a growing, under-courted local segment.</li>
+        <li><i>Analyst inference:</i> the pattern that made "gaming" compelling — a category that is <b>both growing fast and migrating to streaming where Spectrum Reach has a structural edge</b> — points hardest at <b>casino/gaming, legal CTV, and healthcare CTV</b> for Reno.</li>
+      </ul>
+    </div>
+  </details>
+
+  <h2>Method, conventions &amp; data gaps</h2>
+  <details>
+    <summary>How sizing/growth was derived, and what to confirm before presenting</summary>
+    <div class="dc">
+      <ul>
+        <li><b>Fact vs. inference.</b> Dollar figures and growth rates are <b>facts</b> from the cited public sources; the priority ranking and Reno-fit judgments are <i>analyst inference</i> (same convention as the Competitive Landscape Analysis &amp; Heatmap).</li>
+        <li><b>Why national proxies.</b> No public dataset reports ad spend by category for one DMA. Reno-level category spend is proprietary (Borrell, BIA ADVantage, Kantar — paid, county-level at finest). National <b>local-advertising</b> benchmarks are the cleanest public proxy; treat them as directional, not as Reno actuals.</li>
+        <li><span class="flag">VERIFY before the deck:</span> (1) the BIA local-TV vertical figures (legal $1.7B, auto mfr $989M, pharma $882M) are 2025 local-TV spend, not total category spend — keep the qualifier. (2) Several channel-growth stats (legal CTV +241%, healthcare CTV +60%, auto CTV CAGR) come from <b>ad-vendor blogs</b> (Taqtics, Innovid, Demand Local), not primary research — good for direction, cite cautiously. (3) Reno casino/auto/legal/finance advertiser names are from the project's competitive work + employer lists; confirm each is an <i>active local advertiser</i>, not just a large employer.</li>
+        <li><b>Ties to existing work.</b> This view extends the <b>Competitive Landscape Analysis §5.3</b> (white space) and the <b>Reno Opportunity Heatmap</b> (which already carries broadband/affluence/Spanish-language layers you can cross with these categories to find <i>where</i> in Reno to sell each one).</li>
+      </ul>
+    </div>
+  </details>
+
+  <h2>Sources</h2>
+  <div class="note">
+    <div class="srclist">
+      <p><b>Overall / cross-category</b><br>
+      BIA Advisory — 2026 local ad forecast $184.5B, +8.1%, growth verticals: <a href="https://www.bia.com/press-releases/bia-revises-2026-local-ad-forecast-total-spend-to-reach-184-5-billion-2/">bia.com</a> · local-TV vertical spenders (legal $1.7B etc.) &amp; legal $8.54B: <a href="https://bia.com/trends26/">bia.com/trends26</a></p>
+      <p><b>Travel &amp; Tourism / Gaming</b><br>
+      eMarketer — US travel digital ad $8.77B (2025), fastest-growing 3 yrs: <a href="https://www.emarketer.com/content/us-travel-industry-ad-spend-growth-outpaces-other-industries-third-year-row">emarketer.com</a> · Casino tourism market $61.4B→$103.9B, 5.4% CAGR: <a href="https://market.us/report/casino-tourism-market/">market.us</a> · Reno visitor profile (49% casino-hotel): <a href="https://www.rscva.com/wp-content/uploads/2025/04/Visit-Reno-Tahoe-2024-Visitor-Profile-Report-of-Findings-FINAL.pdf">RSCVA</a> · airport &amp; FY25 performance: <a href="https://www.rscva.com/">rscva.com</a></p>
+      <p><b>Healthcare</b><br>
+      MM+M / eMarketer — digital ($26.2B) overtakes linear TV (2026): <a href="https://www.mmm-online.com/features/healthcare-marketers-trend-report-2026-digital-ad-spend-overtakes-linear-tv/">mmm-online.com</a> · channel growth (CTV +60%, video +70%) &amp; segment CAGRs: <a href="https://www.innovid.com/resources/blog/2026-pharmaceutical-healthcare-advertising-outlook">Innovid</a>, <a href="https://www.imarcgroup.com/us-healthcare-advertising-market">IMARC</a></p>
+      <p><b>Automotive</b><br>
+      BIA/Innovid — local auto $10.7B, ~⅔ digital, CTV/OTT $391.6M→$412.8M: <a href="https://www.innovid.com/resources/blog/2026-automotive-advertising-outlook">Innovid</a> · tier structure &amp; local-radius data: <a href="https://www.demandlocal.com/blog/dealership-advertising-spend-statistics/">Demand Local</a></p>
+      <p><b>Legal Services</b><br>
+      Taqtics — legal ad $2.9–3.2B, +32% since 2020, CTV +241% in 2025: <a href="https://taqtics.com/blog/attorney-advertising-data/">taqtics.com</a> · CTV vs broadcast 4.5×: <a href="https://lexgro.com/insights/law-firm-advertising-channel-roi/">LEXGRO</a></p>
+      <p><b>Finance &amp; Insurance</b><br>
+      eMarketer — fin+insurance ad +17.8% to $5.9B H1'25: <a href="https://www.emarketer.com/content/financial-insurance-brands-pushed-ad-spending-new-heights-first-half-of-2025">emarketer.com</a> · banking +20% / insurance +17%: <a href="https://www.invoca.com/blog/financial-services-marketing-statistics">Invoca</a> · bank marketing spend: <a href="https://thefinancialbrand.com/news/banking-trends-strategies/marketing-spend-benchmarks-2026-cpg-financial-brand-196920">The Financial Brand</a></p>
+      <p><b>Home Improvement</b><br>
+      WebFX / LocaliQ — home-services market $657B, lead costs (roofing $228, remodel $350–500 CPL): <a href="https://www.webfx.com/blog/home-services/home-services-marketing-benchmarks/">WebFX</a>, <a href="https://localiq.com/blog/home-services-advertising-benchmarks/">LocaliQ</a></p>
+      <p><b>Education</b><br>
+      Higher-ed marketing benchmarks — ~$1.2B total spend, digital &gt;75%, AVOD +233% / mobile video +63%: <a href="https://www.searchinfluence.com/blog/90-higher-education-marketing-stats-2026/">Search Influence</a>, <a href="https://goldenmarkers.com/blogs/education-marketing-trends/">Golden Markers</a></p>
+      <p><b>Reno advertiser base</b><br>
+      Top Washoe County employers (Renown, casinos, UNR, WCSD, Saint Mary's): <a href="https://nevadaworkforce.com/_docs/Top-Employers/20211/Top-20-Employers---Washoe-County">NV Workforce</a> · Renown scale: <a href="https://www.renown.org/About">renown.org</a> · plus the project's <i>Reno Competitive Landscape Analysis</i> (Dolan Auto, local agencies, casino/gaming context) &amp; <i>Reno Opportunity Heatmap</i> (gaming/tourism economics).</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Prepared for the Spectrum Reach MR&amp;I Reno sub-team · category opportunity view for the Go-to-Market Refresh · public sources only, no confidential Spectrum Reach data · figures are U.S. local-advertising benchmarks used as directional proxies for the Reno DMA · v1 · 2026-06-23
+</footer>
+
+<script>
+const CATS = [
+  {
+    id:"travel", icon:"✈️", name:"Travel & Tourism", priority:1, rank:1, growth:"hot", growthLabel:"Hot",
+    serves:"Casinos & gaming resorts, hotels, ski/outdoor destinations, the DMO (RSCVA), restaurants & attractions, airlines",
+    size:"US travel digital ad $8.77B (2025)", sizeRank:5,
+    growthFig:"Fastest-growing ad industry, 3 yrs running",
+    subs:[["Casinos / gaming resorts",true],["Destination marketing (DMO)",false],["Hotels & resorts",false],["Ski & outdoor recreation",true],["Restaurants & attractions",false]],
+    reno:"Reno's defining category. <b>49% of visitors stay in casino hotels</b>; Reno-Tahoe airport hit its highest traffic in ~2 decades; RSCVA is exceeding budget. Advertisers: <b>Peppermill, Grand Sierra Resort, Atlantis, Nugget, Caesars (Eldorado/Silver Legacy/Circus Circus)</b>, ski resorts, RSCVA.",
+    take:"#1 priority. National ad momentum + 5.4% CAGR casino-tourism growth + the deepest Reno advertiser base. This is the validated 'gaming' thesis."
+  },
+  {
+    id:"health", icon:"🏥", name:"Healthcare", priority:1, rank:2, growth:"hot", growthLabel:"Hot",
+    serves:"Hospitals & health systems, urgent care, dental/ortho, pharma (DTC), telehealth, Medicare Advantage plans",
+    size:"US pharma+health digital ad $26.2B (2026)", sizeRank:2,
+    growthFig:"Digital overtakes linear TV in 2026; CTV budgets +60%",
+    subs:[["Hospitals / health systems",true],["Medicare Advantage",true],["Urgent care",false],["Dental & ortho",false],["Telehealth",false]],
+    reno:"<b>Renown Health</b> is Reno's largest employer (8,000+ staff); competes with <b>Saint Mary's</b> and <b>Carson Tahoe Health</b> — provider rivalry sustains local brand spend. Aging in-migration boosts Medicare-season demand.",
+    take:"#2 priority. Huge + the fastest channel shift to streaming, anchored by Reno's biggest employer and a genuinely competitive provider market."
+  },
+  {
+    id:"auto", icon:"🚗", name:"Automotive", priority:1, rank:3, growth:"warm", growthLabel:"Warm",
+    serves:"Local new-car dealers (Tier 3), used/pre-owned lots, dealer associations (Tier 2), service & parts, EV",
+    size:"US local auto ad $10.7B (2026) — largest local vertical", sizeRank:1,
+    growthFig:"Auto CTV/OTT 7.9% CAGR; 86% of marketers raising CTV",
+    subs:[["Tier 3 local dealers",true],["Used / pre-owned",false],["Service & parts (fixed ops)",true],["EV / new models",false],["Dealer associations (Tier 2)",false]],
+    reno:"The classic reliable local-TV buyer. <b>Dolan Auto Group</b> and the Reno dealer cluster spend consistently; <b>50–80% of sales occur within 5–10 miles</b> of the lot — a textbook case for addressable/geo-targeted CTV.",
+    take:"#3 priority. The largest single local vertical and structurally built for Spectrum's local targeting; reliable base revenue, growing CTV upside."
+  },
+  {
+    id:"legal", icon:"⚖️", name:"Legal Services", priority:2, rank:4, growth:"hot", growthLabel:"Hot",
+    serves:"Personal-injury & mass-tort firms, criminal defense, family law, estate/elder law, immigration",
+    size:"$1.7B on local TV (2025) — top local-TV vertical", sizeRank:4,
+    growthFig:"Legal CTV ad spend +241% in 2025",
+    subs:[["Personal injury",true],["Mass tort",true],["Criminal defense",false],["Family law",false],["Estate / elder law",false]],
+    reno:"High budgets per advertiser and the steepest streaming migration of any category — yet CTV is still only ~3% of legal impressions, so runway is large. Reno PI/injury firms are an <span class='flag'>under-mapped</span> local segment worth profiling.",
+    take:"#4 priority. Explosive CTV growth + high per-advertiser spend make this a high-upside, likely under-served Reno opportunity."
+  },
+  {
+    id:"finance", icon:"🏦", name:"Finance & Insurance", priority:2, rank:5, growth:"hot", growthLabel:"Hot",
+    serves:"Community banks & credit unions, insurance (P&C, health, Medicare), mortgage/lending, wealth/tax, fintech",
+    size:"Fin+insurance ad $5.9B in H1 2025", sizeRank:3,
+    growthFig:"Total spend +17.8% H1'25; banking +20%, insurance +17%",
+    subs:[["Credit unions",true],["Insurance agents",true],["Mortgage / lending",false],["Wealth & tax",false],["Fintech",false]],
+    reno:"A BIA-named growth vertical. Local players — <b>Nevada State Bank, Greater Nevada Credit Union</b>, insurance offices — fit local targeting; 'bank near me' searches are up 60%.",
+    take:"#5 priority. Among the fastest-growing verticals in raw spend; a growing, under-courted local segment for the GTM refresh."
+  },
+  {
+    id:"home", icon:"🔨", name:"Home Improvement", priority:3, rank:6, growth:"warm", growthLabel:"Warm",
+    serves:"HVAC, roofing, remodeling (kitchen/bath), windows & doors, solar, plumbing/electrical, landscaping",
+    size:"$657B US home-services market; fragmented ad spend", sizeRank:6,
+    growthFig:"High-value leads; rising 'near-me' demand",
+    subs:[["HVAC",false],["Roofing",true],["Remodeling (kitchen/bath)",true],["Windows & doors",false],["Solar",false]],
+    reno:"A <b>volume play</b>: many small Reno trades, each a modest but sticky buy. Lead value is high (roofing/remodel $350–500 CPL), and home-improvement demand rises with Reno's housing growth.",
+    take:"#6 priority. Large underlying market but fragmented SMB advertisers — win on breadth and a simple multiscreen package, not on a few big logos."
+  },
+  {
+    id:"education", icon:"🎓", name:"Education", priority:3, rank:7, growth:"steady", growthLabel:"Steady / mixed",
+    serves:"Universities & community colleges, online/professional ed, trade & vocational schools, K-12 private, tutoring",
+    size:"~$1.2B total US education ad spend — smallest", sizeRank:7,
+    growthFig:"Overall growth stalled, but AVOD +233% / mobile video +63%",
+    subs:[["Online / professional ed",true],["Universities",false],["Community / trade schools",true],["K-12 private",false],["Tutoring",false]],
+    reno:"Few but anchor advertisers: <b>UNR, TMCC, Washoe County School District</b>, Sierra Nevada University. Enrollment-driven, seasonal spend; streaming-native formats are the only fast-growing slice.",
+    take:"#7 priority. Defensive/niche — small and largely flat, but AVOD/streaming surging means the few local advertisers are exactly the ones Spectrum can pull onto CTV."
+  }
+];
+
+const grid = document.getElementById("grid");
+const fSort = document.getElementById("f-sort");
+const fGrow = document.getElementById("f-grow");
+const fText = document.getElementById("f-text");
+
+function render(){
+  const sort = fSort.value, grow = fGrow.value, q = fText.value.trim().toLowerCase();
+  let list = CATS.slice();
+  if(grow) list = list.filter(c=>c.growth===grow);
+  if(q) list = list.filter(c=>{
+    const hay = (c.name+" "+c.serves+" "+c.reno+" "+c.subs.map(s=>s[0]).join(" ")).toLowerCase();
+    return hay.includes(q);
+  });
+  const growRank = {hot:0,warm:1,steady:2};
+  if(sort==="priority") list.sort((a,b)=>a.priority-b.priority);
+  if(sort==="size") list.sort((a,b)=>a.sizeRank-b.sizeRank);
+  if(sort==="growth") list.sort((a,b)=>growRank[a.growth]-growRank[b.growth]);
+
+  grid.innerHTML = list.map(c=>`
+    <div class="card p-${c.priority}">
+      <div class="hd">
+        <h3><span><span class="ic">${c.icon}</span> ${c.name}</span><span class="rankpill">Priority #${c.rank}</span></h3>
+      </div>
+      <div class="serves">${c.serves}</div>
+      <div class="metrics">
+        <div class="metric"><div class="ml">Size (local ad $)</div><div class="mv">${c.size}</div></div>
+        <div class="metric"><div class="ml">Growth</div><div class="mv" style="font-size:13px">${c.growthFig}</div><span class="gtag ${c.growth}">${c.growthLabel}</span></div>
+      </div>
+      <div class="body">
+        <div class="lab">Fastest-growing sub-categories ⭐</div>
+        <div class="subs">${c.subs.map(s=>`<span class="sub-chip${s[1]?' star':''}">${s[1]?'⭐ ':''}${s[0]}</span>`).join("")}</div>
+        <div class="lab">Reno advertiser base</div>
+        <div class="reno">${c.reno}</div>
+        <div class="take">${c.take}</div>
+      </div>
+    </div>`).join("");
+}
+fSort.onchange = render; fGrow.onchange = render; fText.oninput = render;
+render();
+</script>
+</body>
+</html>

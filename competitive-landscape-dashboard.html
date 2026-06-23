@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reno Competitive Landscape — Spectrum Reach</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2430; --line:#2d3441;
+    --text:#e6edf3; --muted:#9aa7b4; --accent:#1d9bf0;
+    --high:#ff5c5c; --med:#ffb83d; --medlow:#ffd76a; --low:#5fd38d;
+    --spectrum:#0073e6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.5}
+  header{padding:28px 32px 18px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#121922,#0d1117)}
+  h1{margin:0 0 4px;font-size:24px;letter-spacing:-.3px}
+  .sub{color:var(--muted);font-size:13px}
+  .wrap{padding:24px 32px;max-width:1240px;margin:0 auto}
+  .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:20px}
+  .bar label{font-size:12px;color:var(--muted);margin-right:4px}
+  select,input[type=text]{background:var(--panel2);color:var(--text);border:1px solid var(--line);
+    border-radius:8px;padding:8px 10px;font-size:13px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .kpi .n{font-size:26px;font-weight:700}
+  .kpi .l{font-size:12px;color:var(--muted)}
+  .kpi.high .n{color:var(--high)} .kpi.med .n{color:var(--med)} .kpi.low .n{color:var(--low)}
+  h2{font-size:16px;margin:28px 0 12px;border-left:3px solid var(--accent);padding-left:10px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;
+    border-top:4px solid var(--line);transition:transform .1s}
+  .card:hover{transform:translateY(-2px)}
+  .card.t-HIGH{border-top-color:var(--high)}
+  .card.t-MEDIUM{border-top-color:var(--med)}
+  .card[data-threat="MEDIUM-LOW"]{border-top-color:var(--medlow)}
+  .card[data-threat="LOW-MEDIUM"]{border-top-color:var(--medlow)}
+  .card.t-LOW{border-top-color:var(--low)}
+  .card h3{margin:0 0 2px;font-size:15px}
+  .cat{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;margin-top:8px}
+  .badge.HIGH{background:rgba(255,92,92,.15);color:var(--high)}
+  .badge.MEDIUM{background:rgba(255,184,61,.15);color:var(--med)}
+  .badge[data-t="MEDIUM-LOW"],.badge[data-t="LOW-MEDIUM"]{background:rgba(255,215,106,.15);color:var(--medlow)}
+  .badge.LOW{background:rgba(95,211,141,.15);color:var(--low)}
+  .card .row{font-size:12.5px;margin-top:8px}
+  .card .row b{color:var(--muted);font-weight:600;display:block;font-size:11px;text-transform:uppercase;letter-spacing:.4px;margin-bottom:1px}
+  .map{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:8px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  .map th,.map td{padding:12px 14px;text-align:left;border:1px solid var(--line);vertical-align:top}
+  .map th{background:var(--panel2);font-size:12px;color:var(--muted)}
+  .map .corner{background:rgba(0,115,230,.12);border:1px solid var(--spectrum)}
+  .map .corner b{color:#5cb3ff}
+  .legend{font-size:12px;color:var(--muted);margin:6px 0 24px}
+  .legend span{display:inline-block;margin-right:14px}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:middle}
+  details{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+  summary{cursor:pointer;font-weight:600;font-size:14px}
+  details p{font-size:13px;color:var(--text)}
+  .note{font-size:12px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);
+    border-radius:10px;padding:12px 14px;margin-top:24px}
+  a{color:var(--accent)}
+  footer{padding:20px 32px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);margin-top:30px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Reno, NV — Competitive Landscape</h1>
+  <div class="sub">Spectrum Reach · Market Research &amp; Insights · advertising-sales competitors in the Reno DMA (#103) · public sources only · v1 · 2026-06-18</div>
+</header>
+
+<div class="wrap">
+
+  <div class="kpis">
+    <div class="kpi"><div class="n" id="k-total">0</div><div class="l">Competitors profiled</div></div>
+    <div class="kpi high"><div class="n" id="k-high">0</div><div class="l">HIGH threat</div></div>
+    <div class="kpi med"><div class="n" id="k-med">0</div><div class="l">MEDIUM threat</div></div>
+    <div class="kpi low"><div class="n" id="k-low">0</div><div class="l">LOW threat</div></div>
+    <div class="kpi"><div class="n">315k</div><div class="l">Reno TV households</div></div>
+  </div>
+
+  <div class="bar">
+    <label>Category</label>
+    <select id="f-cat"><option value="">All</option></select>
+    <label>Threat</label>
+    <select id="f-threat">
+      <option value="">All</option><option>HIGH</option><option>MEDIUM</option>
+      <option>MEDIUM-LOW</option><option>LOW-MEDIUM</option><option>LOW</option>
+    </select>
+    <label>Search</label>
+    <input type="text" id="f-text" placeholder="name, channel…" style="flex:1;min-width:160px">
+  </div>
+
+  <div class="legend">
+    <span><i class="dot" style="background:var(--high)"></i>HIGH</span>
+    <span><i class="dot" style="background:var(--med)"></i>MEDIUM</span>
+    <span><i class="dot" style="background:var(--medlow)"></i>MED-LOW / LOW-MED</span>
+    <span><i class="dot" style="background:var(--low)"></i>LOW</span>
+  </div>
+
+  <h2>Competitor cards</h2>
+  <div class="grid" id="grid"></div>
+
+  <h2>Positioning map — channel breadth × service model</h2>
+  <div class="map">
+    <table>
+      <tr><th></th><th>Self-serve / DIY</th><th>Managed / consultative service</th></tr>
+      <tr>
+        <th>Single / narrow channel</th>
+        <td>Disney-Hulu CM · Meta · TikTok · Amazon · YouTube (self-serve)</td>
+        <td>Lamar &amp; OUTFRONT (OOH) · Cumulus &amp; Lotus (radio) · This Is Reno / RN&amp;R / KUNR</td>
+      </tr>
+      <tr>
+        <th>Broad / multiscreen</th>
+        <td>Google (search + video + display)</td>
+        <td class="corner">Broadcast TV (Gray/KOLO · Sarkes/KTVN · Sinclair/KRNV-KRXI) · Gannett LocaliQ · local agencies · <b>→ SPECTRUM REACH</b></td>
+      </tr>
+    </table>
+  </div>
+  <div class="legend">Spectrum Reach's defensible corner is <b style="color:#5cb3ff">broad multiscreen + managed service</b>. It shares that quadrant with the TV groups, LocaliQ, and agencies — and must differentiate <i>within</i> it via cross-publisher OTT aggregation, first-party household data, and unified measurement.</div>
+
+  <h2>Most dangerous competitors</h2>
+  <details open><summary>1 · Local broadcast-TV groups (Sinclair/CompulseOTT + Gray/Gray Digital Media)</summary>
+    <p>The only competitors matching Spectrum's exact "local video + streaming + digital" bundle — and they beat it on local-news credibility and audience. CompulseOTT is a near-mirror of Spectrum's OTT/CTV product. They own the "local TV" mental category and now have real CTV/digital stacks.</p></details>
+  <details><summary>2 · Self-serve premium CTV — Disney/Hulu Campaign Manager (+ YouTube/Google)</summary>
+    <p>Structurally disintermediates Spectrum's core OTT value prop: a Reno SMB can buy premium, DMA-targeted streaming for ~$500 with no salesperson. Reframes Spectrum's headline capability (streaming access) as a commodity — forcing competition on service, aggregation, and data instead of access.</p></details>
+  <details><summary>3 · Gannett LocaliQ (the quiet one) + agencies as budget gatekeepers</summary>
+    <p>LocaliQ is a full digital-marketing agency inside a declining newspaper; local agencies decide where Reno's biggest accounts spend. Together they control the digital-services narrative and the largest local budgets — the growth area Spectrum's digital arm is chasing.</p></details>
+
+  <h2>White space for Spectrum Reach</h2>
+  <details open><summary>Where Spectrum has a credible opening</summary>
+    <p><b>Cross-publisher OTT/CTV aggregation</b> (one buy, one measurement) — no broadcaster or self-serve platform sells beyond its own inventory. Strongest, most defensible white space.<br><br>
+    <b>First-party household addressability</b> — set-top-box/household data broadcasters and platforms can't replicate.<br><br>
+    <b>Managed service for "self-serve abandoners"</b> — win the advertisers who tried DIY and want a partner (strategy + AI-assisted creative + one point of contact).<br><br>
+    <b>The true one-stop multiscreen buy</b> — collapse the TV+radio+OOH+Meta+Google+agency fragmentation.<br><br>
+    <b>Multicultural / Spanish-language reach</b> — an underserved Reno targeting opportunity.</p></details>
+
+  <h2>Advertiser pain points the GTM refresh can attack</h2>
+  <details><summary>Six wedges synthesized across all competitors</summary>
+    <p>1 · <b>Fragmentation</b> — advertisers juggle many vendors → sell the consolidated multiscreen buy.<br>
+    2 · <b>DIY burden</b> — self-serve gives access but no strategy/creative → sell managed service + AI-assisted creative.<br>
+    3 · <b>Weak attribution</b> in OOH/radio/print → sell addressable targeting + cross-platform measurement.<br>
+    4 · <b>Single-publisher ceilings</b> → sell reach across publishers.<br>
+    5 · <b>Aging/declining audiences</b> in linear-only TV/radio/print → sell the streaming bridge.<br>
+    6 · <b>Transparency concerns</b> → pre-empt with transparent, verified measurement.</p></details>
+
+  <div class="note">
+    <b>Read me.</b> Threat levels are analyst assessments; channel/ownership facts are sourced in the companion document
+    <i>Reno Competitive Landscape Analysis.md</i>. Public, advertiser-side sentiment data is scarce — reputation notes lean on
+    employee/viewer proxies. Items needing verification before the July 28 deck (exact DMA rank, Sinclair's current affiliation
+    structure, Clear Channel's Reno status, KTVN's OTT product) are listed in §9 of that document. No confidential Spectrum Reach data was used.
+  </div>
+</div>
+
+<footer>Reno Competitive Landscape Dashboard · self-contained · open in any browser · built in Claude Cowork for the Spectrum Reach MR&amp;I Reno sub-team.</footer>
+
+<script>
+const DATA = [
+  {name:"KOLO-TV (ABC 8)",cat:"Broadcast TV",parent:"Gray Media",threat:"HIGH",
+   channels:"Linear TV · OTT/CTV · digital (Gray Digital Media)",
+   client:"Local SMBs & regional agencies (auto, legal, healthcare, home services)",
+   strength:"Gray scale & training; strong ABC news ratings; turnkey TV+digital bundle",
+   weakness:"Sells own inventory/audience only; weaker cross-publisher reach & addressability; older linear audience"},
+  {name:"KTVN (CBS 2)",cat:"Broadcast TV",parent:"Sarkes Tarzian",threat:"HIGH",
+   channels:"Linear TV · digital · in-house commercial production",
+   client:"Local businesses in Reno/Sparks/N. Nevada",
+   strength:"Local independent ownership (decisions stay local); free/low-cost production; CBS news brand",
+   weakness:"Smallest parent — no national digital platform; OTT/CTV product likely thinner (verify)"},
+  {name:"KRNV (NBC) / KRXI (Fox)",cat:"Broadcast TV",parent:"Sinclair / Cunningham",threat:"HIGH",
+   channels:"Linear TV (NBC+Fox) · CompulseOTT (local CTV) · Compulse 360 (full digital)",
+   client:"Local & regional advertisers and agencies",
+   strength:"Most tech-forward local TV; CompulseOTT mirrors Spectrum's OTT pitch; dual-network reach",
+   weakness:"Sinclair national reputation baggage; shared-services feels less local; sells own/aggregated inventory only"},
+  {name:"Disney / Hulu Campaign Manager",cat:"Streaming / CTV",parent:"Disney",threat:"HIGH",
+   channels:"Self-serve premium OTT/CTV · ZIP & DMA targeting",
+   client:"Increasingly local/SMB (local buyers +~50% via self-serve)",
+   strength:"Premium brand inventory; ~$500 minimum; no salesperson friction; direct DMA targeting",
+   weakness:"Single-publisher only; NO local service/strategy; SMB carries creative & optimization burden; no linear TV"},
+  {name:"YouTube / Google",cat:"Streaming / CTV",parent:"Google",threat:"HIGH",
+   channels:"YouTube video · YouTube on CTV · search · display",
+   client:"Solo SMBs to agencies",
+   strength:"Reach; search intent data; self-serve; low entry cost; measurement",
+   weakness:"Skippable formats; UGC/brand-safety; no local service; fragmented from linear TV"},
+  {name:"Lamar Advertising",cat:"OOH",parent:"Lamar",threat:"MEDIUM",
+   channels:"Bulletins · posters · digital billboards · transit · I-80 & casino corridors",
+   client:"Casinos, auto, legal, healthcare, tourism, regional/national brands",
+   strength:"Dominant Reno inventory (absorbed Clear Channel 2016); premium corridors; digital boards; strong employee culture",
+   weakness:"No granular targeting/attribution; one-message creative; can't prove ROI like addressable CTV"},
+  {name:"Meta (Facebook/Instagram)",cat:"Social / Digital",parent:"Meta",threat:"MEDIUM",
+   channels:"Self-serve social · geo & interest targeting",
+   client:"Local SMBs (dominant for social spend)",
+   strength:"Tight geo/interest targeting; cheap; ubiquitous for SMB social",
+   weakness:"No premium TV environment; no service; rising privacy limits on targeting"},
+  {name:"Cumulus Media (4 stations)",cat:"Radio",parent:"Cumulus",threat:"MEDIUM",
+   channels:"Broadcast radio (KBUL, KKOH, KNEV, KWYL) · streaming · digital",
+   client:"Local SMBs — auto, home services, events, retail",
+   strength:"Low cost-per-spot; personality endorsements; format coverage; live events",
+   weakness:"Audio-only; aging/declining audience; weak attribution; fragmented stations"},
+  {name:"Lotus Communications (~7 stations)",cat:"Radio",parent:"Lotus (private)",threat:"MEDIUM",
+   channels:"Broadcast radio (KOZZ, KDOT, KTHX, KHIT/ESPN…) · digital",
+   client:"Local SMBs; sports advertisers; rock/AAA audiences",
+   strength:"Deep local roots; strong rock/sports brands; local decision-making",
+   weakness:"Same radio limits (audio-only, aging audience, attribution); smaller digital stack"},
+  {name:"Reno Gazette-Journal + LocaliQ",cat:"Print + Digital agency",parent:"Gannett",threat:"MEDIUM",
+   channels:"Print & digital display · LocaliQ full digital agency (search, social, display, video, SEO, sites)",
+   client:"Local SMBs (LocaliQ) + brand/legacy print advertisers",
+   strength:"LocaliQ is a credible full-funnel digital competitor with AI tooling; trusted news brand",
+   weakness:"Print in structural decline; no premium TV/CTV video product; digital-only ROI focus"},
+  {name:"Local agencies (Abbi, KPS3, Noble, Estipona)",cat:"Agency / Buyer",parent:"Local",threat:"MEDIUM",
+   channels:"Strategy + media planning/buying across all channels",
+   client:"Largest local accounts (Renown, Dolan, City of Reno, NV State Bank)",
+   strength:"Control biggest local budgets; full-service strategy; deep local knowledge",
+   weakness:"Gatekeepers, not media owners — treat as channel partners; retainer cost; may skip smallest SMBs"},
+  {name:"OUTFRONT Media",cat:"OOH",parent:"OUTFRONT",threat:"MEDIUM-LOW",
+   channels:"Billboards · transit · digital OOH",
+   client:"Regional/national brands wanting OOH reach",
+   strength:"National OOH operator with Reno footprint",
+   weakness:"Smaller Reno footprint than Lamar; weak NPS / service complaints (perception scan); same OOH targeting limits"},
+  {name:"Amazon / TikTok",cat:"Streaming / Digital",parent:"Amazon / ByteDance",threat:"LOW-MEDIUM",
+   channels:"Amazon retail-media & Fire TV CTV · TikTok self-serve social video",
+   client:"Retail (Amazon); youth-skewing brands (TikTok)",
+   strength:"Local-targeting capability; large reach",
+   weakness:"Limited dedicated local-Reno sales presence; category-specific relevance only"},
+  {name:"This Is Reno / RN&R / KUNR",cat:"Local digital / print / public radio",parent:"Local",threat:"LOW",
+   channels:"Display · sponsorships · event tie-ins · (KUNR) underwriting",
+   client:"Hyper-local/community brands",
+   strength:"Civically engaged, locally loyal audience; community credibility",
+   weakness:"Small reach and budgets; not a core competitor"}
+];
+
+const grid=document.getElementById('grid'), fCat=document.getElementById('f-cat'),
+      fThreat=document.getElementById('f-threat'), fText=document.getElementById('f-text');
+[...new Set(DATA.map(d=>d.cat))].sort().forEach(c=>{
+  const o=document.createElement('option');o.value=c;o.textContent=c;fCat.appendChild(o);});
+function render(){
+  const c=fCat.value, t=fThreat.value, q=fText.value.toLowerCase();
+  grid.innerHTML='';
+  DATA.filter(d=>(!c||d.cat===c)&&(!t||d.threat===t)&&
+    (!q||(d.name+d.channels+d.client+d.parent).toLowerCase().includes(q)))
+    .forEach(d=>{
+      const el=document.createElement('div');
+      el.className='card t-'+d.threat; el.dataset.threat=d.threat;
+      el.innerHTML=`<div class="cat">${d.cat} · ${d.parent}</div>
+        <h3>${d.name}</h3>
+        <span class="badge ${d.threat}" data-t="${d.threat}">${d.threat} threat</span>
+        <div class="row"><b>Channels sold</b>${d.channels}</div>
+        <div class="row"><b>Target client</b>${d.client}</div>
+        <div class="row"><b>Strength</b>${d.strength}</div>
+        <div class="row"><b>Weakness</b>${d.weakness}</div>`;
+      grid.appendChild(el);
+    });
+}
+function kpis(){
+  document.getElementById('k-total').textContent=DATA.length;
+  document.getElementById('k-high').textContent=DATA.filter(d=>d.threat==='HIGH').length;
+  document.getElementById('k-med').textContent=DATA.filter(d=>d.threat==='MEDIUM').length;
+  document.getElementById('k-low').textContent=DATA.filter(d=>d.threat.includes('LOW')).length;
+}
+[fCat,fThreat].forEach(e=>e.addEventListener('change',render));
+fText.addEventListener('input',render);
+kpis();render();
+</script>
+</body>
+</html>

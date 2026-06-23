@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why Spectrum Reach Gets Buried — Traditional vs Multiscreen (Reno)</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0d1117;--panel:#161b22;--panel2:#1c2430;--line:#2d3441;
+    --text:#e6edf3;--muted:#9aa7b4;--accent:#1d9bf0;
+    --trad:#ff9f40;--digital:#1d9bf0;--ctv:#5fd38d;--linear:#ff6384;
+    --warn:#ffb83d;--good:#5fd38d;--bad:#ff5c5c;--spectrum:#0073e6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.6}
+  header{padding:34px 32px 22px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#13202b,#0d1117)}
+  h1{margin:0 0 6px;font-size:27px;letter-spacing:-.4px;max-width:900px}
+  .sub{color:var(--muted);font-size:13px}
+  .wrap{padding:8px 32px 40px;max-width:1060px;margin:0 auto}
+  section{margin-top:36px}
+  h2{font-size:19px;margin:0 0 6px;border-left:3px solid var(--accent);padding-left:11px}
+  h2 .q{color:var(--muted);font-weight:400;font-size:14px;display:block;padding-left:0;margin-top:2px}
+  p{font-size:14.5px}
+  .lead{font-size:15.5px}
+  .verdict{background:linear-gradient(135deg,#16222e,#1a2733);border:1px solid var(--spectrum);
+    border-radius:14px;padding:22px 24px;margin-top:24px}
+  .verdict h3{margin:0 0 10px;font-size:16px;color:#5cb3ff}
+  .verdict ol{margin:0;padding-left:20px}
+  .verdict li{margin-bottom:9px;font-size:14.5px}
+  .charts{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:16px}
+  .chartbox{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .chartbox h4{margin:0 0 2px;font-size:14px}
+  .chartbox .cap{font-size:11.5px;color:var(--muted);margin-bottom:10px}
+  .chartbox canvas{max-height:230px}
+  .full{grid-column:1/-1}
+  .stat{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px}
+  .bignum{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;flex:1;min-width:200px}
+  .bignum .n{font-size:30px;font-weight:800;line-height:1.1}
+  .bignum .l{font-size:12.5px;color:var(--muted);margin-top:4px}
+  .n.trad{color:var(--trad)}.n.dig{color:var(--digital)}.n.ctv{color:var(--ctv)}
+  .n.warn{color:var(--warn)}.n.bad{color:var(--bad)}.n.good{color:var(--good)}
+  .callout{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--warn);
+    border-radius:10px;padding:14px 16px;margin-top:16px;font-size:14px}
+  .callout.myth{border-left-color:var(--bad)}
+  .callout.truth{border-left-color:var(--good)}
+  .callout b{color:var(--text)}
+  .tag{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:5px;
+    text-transform:uppercase;letter-spacing:.5px;vertical-align:middle;margin-right:6px}
+  .tag.fact{background:rgba(95,211,141,.16);color:var(--good)}
+  .tag.inf{background:rgba(29,155,240,.16);color:var(--accent)}
+  .tag.flag{background:rgba(255,184,61,.16);color:var(--warn)}
+  .squeeze{display:grid;grid-template-columns:1fr;gap:0;margin-top:18px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+  .squeeze div{padding:15px 18px;font-size:14px}
+  .sq-top{background:rgba(255,159,64,.12);border-bottom:1px solid var(--line)}
+  .sq-mid{background:rgba(0,115,230,.16);border-bottom:1px solid var(--line);text-align:center}
+  .sq-bot{background:rgba(29,155,240,.10)}
+  .sq-top b{color:var(--trad)} .sq-bot b{color:var(--digital)} .sq-mid b{color:#5cb3ff}
+  ul.clean{font-size:14px}
+  ul.clean li{margin-bottom:6px}
+  .src{font-size:12px;color:var(--muted)}
+  .src a{color:var(--accent);word-break:break-all}
+  details{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-top:14px}
+  summary{cursor:pointer;font-weight:600;font-size:14px}
+  footer{padding:22px 32px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);margin-top:40px}
+  @media(max-width:760px){.charts{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Why does Spectrum Reach get buried by traditional media — when its multiscreen product is more targeted?</h1>
+  <div class="sub">The honest story · Traditional vs multiscreen advertising in the Reno DMA · Spectrum Reach MR&amp;I · 2026-06-18 · public sources only · national benchmarks + Reno-verified demographics</div>
+</header>
+
+<div class="wrap">
+
+  <p class="lead">You asked a fair question with a built-in thesis: <i>Spectrum Reach offers the superior (targeted, multiscreen) solution, but it's getting buried by traditional broadcast — is that an education gap, and does an aging population explain it?</i> The data mostly supports your instincts, but corrects two of them. The short version: Spectrum isn't simply losing to broadcast because buyers are ignorant. It's being <b>squeezed from two sides</b>, the people who sign the checks really do skew old (just not the Reno population), and "superior" doesn't automatically win when the better product is harder to understand and more expensive per impression.</p>
+
+  <div class="verdict">
+    <h3>The honest answer, up front</h3>
+    <ol>
+      <li><b>"Buried by broadcast" is only half true.</b> At the <i>local</i> level, digital has already passed traditional (52% vs 48% of 2026 local ad spend). The bigger gravitational pull on small-business dollars isn't broadcast — it's cheap, self-serve digital (Facebook is used by ~83% of SMBs). Broadcast is the incumbent that holds the <i>TV</i> budget; DIY digital is what's eating the <i>growth</i>.</li>
+      <li><b>But within TV dollars, linear/broadcast genuinely still dominates</b> (~81% of local TV-set spend in 2026). So your read on broadcast's grip on <i>television</i> money is correct — and it persists for real reasons (trust, reach, low CPM, simplicity), not pure inertia.</li>
+      <li><b>The targeting-efficiency advantage is real.</b> Linear wastes a lot: ~94% of linear impressions reach only ~55% of viewers. Multiscreen/CTV targets to the ZIP or household and optimizes in real time. <i>But</i> it costs more per impression and is harder to measure — so the advantage has to be <i>sold and proven</i>, not assumed.</li>
+      <li><b>The age friction is real — but it's the business owners, not Reno.</b> Reno's population median age is 38.9, essentially the US average. The aging that matters is the <i>decision-makers</i>: ~52% of US business owners are 55+. The people buying ads grew up on broadcast.</li>
+      <li><b>So why is Spectrum buried?</b> A conservative, older buyer + a real education/measurement gap + linear's legitimate strengths + a squeeze between trusted broadcast above and cheap DIY digital below. The fix is education-led, proof-driven, simplified selling — not a better mousetrap.</li>
+    </ol>
+  </div>
+
+  <!-- ===================== SECTION 1 ===================== -->
+  <section>
+    <h2>1 · The spend reality<span class="q">What share of money actually goes traditional vs multiscreen/digital?</span></h2>
+    <p><span class="tag fact">Fact</span> Nationally, BIA Advisory projects <b>$184.5B in local ad spend for 2026</b>. For the first time, <b>digital (52%, ~$89B) has overtaken traditional (48%, ~$82B)</b> at the local level. So traditional media as a whole is <i>not</i> winning — it's narrowly losing. <span class="src">(BIA 2026 local forecast.)</span></p>
+
+    <div class="charts">
+      <div class="chartbox">
+        <h4>Local ad spend 2026 — digital has passed traditional</h4>
+        <div class="cap">US local market, BIA Advisory. Digital now 52% of local dollars.</div>
+        <canvas id="c1"></canvas>
+      </div>
+      <div class="chartbox">
+        <h4>Within TV dollars, linear still dominates — but CTV is climbing fast</h4>
+        <div class="cap">CTV share of local TV-set spend: ~14% (2024) → ~19% (2026). Linear = the rest.</div>
+        <canvas id="c2"></canvas>
+      </div>
+    </div>
+
+    <p style="margin-top:18px"><span class="tag fact">Fact</span> For <b>small businesses specifically</b>, the default channels are digital and cheap: ~83% use Facebook and ~60% Instagram; SMBs typically run only 3–4 channels at once. <span class="src">(PostcardMania 2026 SMB stats; Intuit 2025 SMB Advertising Trends.)</span> <span class="tag inf">Inference</span> The typical Reno SMB's media diet is "a little broadcast or radio for awareness + DIY social for everything else." Premium managed multiscreen (Spectrum's sweet spot) sits in the under-populated middle — it has to be actively sold into the gap.</p>
+
+    <div class="chartbox full" style="margin-top:16px">
+      <h4>How small businesses actually advertise (share using each channel)</h4>
+      <div class="cap">Self-serve social and search dominate SMB usage; broadcast/linear is a smaller, awareness-oriented slice. TV/radio figures are directional. <span class="tag flag">Verify</span></div>
+      <canvas id="c3" style="max-height:260px"></canvas>
+    </div>
+  </section>
+
+  <!-- ===================== SECTION 2 ===================== -->
+  <section>
+    <h2>2 · Is multiscreen actually "superior"? Mostly yes — with honest caveats<span class="q">Your efficiency argument, stress-tested</span></h2>
+    <div class="stat">
+      <div class="bignum"><div class="n bad">94% → 55%</div><div class="l">Share of linear impressions (94%) that reached only ~55% of viewers — i.e. heavy frequency waste &amp; unreached audience <span class="src">(Q1 2022 data)</span></div></div>
+      <div class="bignum"><div class="n good">ZIP / household</div><div class="l">CTV &amp; addressable targeting granularity — vs linear's broad daypart buying</div></div>
+      <div class="bignum"><div class="n warn">$10–20 vs $30+</div><div class="l">Typical CPM: linear (cheaper, wasteful) vs CTV (pricier, precise)</div></div>
+    </div>
+    <p style="margin-top:14px"><span class="tag inf">Your instinct is right</span> Targeted multiscreen genuinely reduces wasted spend — you don't pay to reach people outside the client's geography or demo, and you can optimize mid-flight. For a niche advertiser (a single dealership, a med-spa, a law firm), that efficiency is a decisive advantage.</p>
+    <div class="callout truth"><b>But the honest caveat:</b> linear isn't irrational. Local broadcast carries the <b>highest consumer trust</b> of any medium (viewers are ~4× more likely to trust brands advertising locally), delivers <b>near-universal mass reach</b>, is non-skippable, and is <b>cheaper per impression</b>. For mass-market local categories — casinos, auto, healthcare systems wanting <i>everyone</i> in the DMA — broad reach is a feature, not a bug. The industry's own conclusion is that broadcast + streaming work <b>best together</b>; streaming adds precision and frequency, broadcast supplies reach. <span class="src">(StreamingMedia "Local Broadcast Advantage"; TVB 2025 — note TVB is a broadcast trade body, treat as directional.)</span> <span class="tag flag">Source bias</span></div>
+    <p style="margin-top:12px"><span class="tag inf">Implication</span> Spectrum shouldn't pitch multiscreen as "the replacement for broadcast." It should pitch <b>"broadcast's reach + streaming's precision in one buy, with the waste taken out and the results measured."</b> That reframes the more expensive CPM as <i>less wasted spend</i>, which is exactly your efficiency argument.</p>
+  </section>
+
+  <!-- ===================== SECTION 3 ===================== -->
+  <section>
+    <h2>3 · Is there an education gap? Yes — and it's the real opening<span class="q">Why "more targeted" doesn't translate into adoption</span></h2>
+    <p><span class="tag fact">Fact</span> The documented barriers to CTV/multiscreen adoption among local advertisers are <b>complexity/fragmentation</b> (dozens of platforms — Roku, Hulu, Samsung, YouTube TV…), <b>measurement confusion</b> (no single standard for proving reach/ROI), and <b>plain awareness/misconceptions</b>. <span class="src">(JamLoop; eMarketer CTV FAQ 2026.)</span></p>
+    <p><span class="tag fact">Fact</span> Adoption is nonetheless rising: <b>40%+ of small businesses have used or plan to use CTV within a year</b>, pulled in by low self-serve minimums (~$500 on Hulu/Roku). <span class="src">(Adwave CTV stats 2025.)</span></p>
+    <div class="callout"><b>So the education gap cuts two ways.</b> It explains why a superior product lags — buyers don't understand or can't measure it. <span class="tag inf">Inference</span> But it's also precisely Spectrum Reach's white space: the very things SMBs find hard (aggregating platforms, targeting, measurement) are what an operator with first-party data and managed service can <b>do for them</b>. The competitor that <i>teaches</i> the Reno market wins it. Education isn't overhead here — it's the go-to-market.</p>
+  </section>
+
+  <!-- ===================== SECTION 4 ===================== -->
+  <section>
+    <h2>4 · The age question — myth vs reality<span class="q">Does an aging population explain the friction?</span></h2>
+    <div class="charts">
+      <div class="chartbox">
+        <h4>Reno is NOT an aging outlier</h4>
+        <div class="cap">Median age, 2024. Washoe County (Reno) ≈ US ≈ Nevada.</div>
+        <canvas id="c4"></canvas>
+      </div>
+      <div class="chartbox">
+        <h4>But the people who BUY ads skew old</h4>
+        <div class="cap">US business owners by age (Census 2022 ABS). 52% are 55+.</div>
+        <canvas id="c5"></canvas>
+      </div>
+    </div>
+    <div class="callout myth" style="margin-top:16px"><b>Myth (gently corrected):</b> "Reno has an aging population that prefers traditional media." <span class="tag fact">Fact</span> Washoe County's median age is <b>38.9</b> — essentially identical to the US (~38.5) and Nevada (38.3). Reno's tech/manufacturing in-migration keeps it young-to-average. The aging-population story does <b>not</b> hold for Reno. <span class="src">(Census QuickFacts / Nevada Demographics.)</span></div>
+    <div class="callout truth"><b>Truth (your instinct, relocated):</b> The age friction is in the <b>decision-makers</b>, not the population. <span class="tag fact">Fact</span> ~<b>52.3% of US business owners are 55+</b> (29.5% are 55–64, 22.8% are 65+); Gen X + Boomers own ~84% of small businesses. <span class="src">(Census 2022 ABS; Oberlo/LendingTree.)</span> <span class="tag inf">Inference</span> The owners writing Reno's ad checks came of age on broadcast and radio; comfort and habit are genuine drag forces — but they attach to the buyer, not the audience. <span class="tag flag">Verify</span> This is a <i>national</i> owner-age proxy; Reno-specific owner age isn't public.</p></div>
+    <p style="margin-top:12px"><span class="tag inf">Implication</span> Two practical takeaways: (1) The <i>audience</i> for streaming is fully present in Reno — average age means cord-cutting and CTV viewing are mainstream, so there's no audience reason to stay linear-only. (2) The <i>sales</i> friction is generational on the buyer side — which favors a relationship-led, consultative, "we'll handle the complicated part" pitch over a self-serve dashboard.</p>
+  </section>
+
+  <!-- ===================== SECTION 5 ===================== -->
+  <section>
+    <h2>5 · So why <i>is</i> Spectrum Reach getting buried? The two-sided squeeze<span class="q">Putting it together honestly</span></h2>
+    <p>Spectrum's premium, managed, multiscreen offering sits in the middle of a market that pulls budgets to two easier extremes:</p>
+    <div class="squeeze">
+      <div class="sq-top"><b>↑ Pulled UP to traditional broadcast</b> — trusted, mass-reach, cheap CPM, one simple buy, an existing rep relationship, and a 55+ owner who already believes in it. <i>(KOLO/Gray, KTVN/Sarkes, KRNV-KRXI/Sinclair, radio.)</i></div>
+      <div class="sq-mid"><b>SPECTRUM REACH sits here:</b> premium multiscreen — more targeted &amp; measurable, but pricier per impression, harder to understand, and requiring a salesperson to explain.</div>
+      <div class="sq-bot"><b>↓ Pulled DOWN to cheap DIY digital</b> — Meta/Google/Hulu self-serve from ~$500, no salesperson, instant, "good enough," and where SMB budgets already concentrate. <i>(Facebook ~83% of SMBs.)</i></div>
+    </div>
+    <p style="margin-top:16px"><span class="tag inf">The synthesis</span> "Superior" loses to "familiar" (broadcast) and to "cheap &amp; easy" (DIY digital) whenever the superior option is <b>harder to understand, harder to measure, and more expensive up front</b>. That's not a product failure — it's a <b>communication, proof, and friction</b> failure. Every structural fact above points to the same fix.</p>
+  </section>
+
+  <!-- ===================== SECTION 6 ===================== -->
+  <section>
+    <h2>6 · What this means for the GTM refresh</h2>
+    <ul class="clean">
+      <li><b>Lead with education, not inventory.</b> The buyer doesn't understand multiscreen/measurement; the seller who teaches the market owns it. Make "how targeted TV actually works" the opening, not the rate card.</li>
+      <li><b>Reframe price as waste removed.</b> Use the 94%→55% linear-waste stat: a higher CPM that reaches only the client's real customers can be <i>cheaper per actual prospect</i> than cheap-but-wasteful linear. This is your efficiency argument, made sellable.</li>
+      <li><b>Sell "broadcast + streaming," not "instead of."</b> Meet the trust/reach belief head-on — add precision and measurement on top of the reach owners already value. Avoid making it a referendum on broadcast.</li>
+      <li><b>Productize the hard parts.</b> Aggregation across platforms + first-party targeting + one measurement report is exactly what SMBs find too complex to DIY. That's the managed-service moat against both broadcast and self-serve.</li>
+      <li><b>Match the consultative pitch to an older buyer.</b> A 55+ owner wants a trusted advisor who handles complexity — not a self-serve login. Spectrum's human, local sales model is an asset here, if it's framed as guidance.</li>
+      <li><b>Prove it locally.</b> The fastest cure for the education gap is a measured Reno case study (a dealer, a casino, a health system) showing targeted multiscreen beating a linear-only or DIY-only baseline. Nothing closes the gap like local proof.</li>
+    </ul>
+  </section>
+
+  <!-- ===================== SOURCES ===================== -->
+  <section>
+    <h2>Sources &amp; honesty notes</h2>
+    <details open>
+      <summary>What's solid, what to verify before the deck</summary>
+      <p style="margin-top:10px"><b>Solid (multiple/independent sources):</b> the local digital-vs-traditional 52/48 split and CTV-share trend (BIA); Reno median age ≈ US (Census); business-owner age skew (Census 2022 ABS); CTV adoption barriers and ~$500 self-serve minimums (multiple).</p>
+      <p><b>Treat as directional / flagged:</b></p>
+      <ul class="clean">
+        <li><span class="tag flag">Verify</span> <b>SMB channel-usage percentages</b> (Facebook 83%, etc.) come from marketing-stat compilations and the Intuit SMB report; exact TV/radio SMB-usage figures are not cleanly public — the chart is illustrative of the <i>pattern</i>, not precise shares.</li>
+        <li><span class="tag flag">Source bias</span> <b>Broadcast-strength stats</b> (trust 4×, 82% search lift, 46.6% of ad profit) trace to <b>TVB</b>, a broadcast trade body. Real, but advocacy data — present as "broadcasters' case," not neutral fact.</li>
+        <li><span class="tag flag">Verify</span> <b>"94% of impressions → 55% of viewers"</b> is Q1 2022 vintage; confirm a current figure before external use.</li>
+        <li><span class="tag flag">Verify</span> <b>Owner age is a US proxy</b> — no public Reno-specific business-owner age data. State it as national.</li>
+        <li><span class="tag flag">Gap</span> <b>No public Reno-specific ad-spend-by-channel data exists.</b> All spend splits are national/local-market benchmarks applied to Reno. A Reno-specific read would require primary research (see the perception-scan recommendation).</li>
+      </ul>
+      <p class="src" style="margin-top:12px">
+        BIA 2026 local forecast — https://www.bia.com/press-releases/bia-revises-2026-local-ad-forecast-total-spend-to-reach-184-5-billion-2/ ·
+        RAIN News (digital surpasses traditional) — https://rainnews.com/bia-updated-2026-local-us-ad-revenue/ ·
+        MediaPost (CTV share of local TV) — https://www.mediapost.com/publications/article/411637/ ·
+        PostcardMania SMB stats — https://www.postcardmania.com/blog/small-business-marketing-statistics-definitive-guide/ ·
+        Intuit 2025 SMB Advertising Trends — https://digitalasset.intuit.com/render/content/dam/intuit/sbseg/en_us/Blog/Downloadable-assset/Ebook/2025-small-business-advertising-trends-report.pdf ·
+        CTV vs linear efficiency — https://www.tvscientific.com/insight/addressable-tv-vs-linear-tv · https://research.mountain.com/trends/comparing-linear-tv-to-ctv/ ·
+        CTV adoption barriers — https://jamloop.com/ctv-ads-for-local-business-success/ · https://www.emarketer.com/content/faq-on-ctv-advertising--trends--formats--platforms-watch-2026 ·
+        CTV SMB adoption 40%+ — https://adwave.com/resources/ctv-advertising-statistics-2025 ·
+        Broadcast advantage (TVB-sourced) — https://www.streamingmedia.com/Articles/Post/Blog/The-Local-Broadcast-Advantage-Trust-Scale-and-Real-Results---173253.aspx ·
+        Washoe median age — https://www.census.gov/quickfacts/washoecountynevada · https://www.nevada-demographics.com/washoe-county-demographics ·
+        Owner age — https://www.oberlo.com/statistics/average-age-of-small-business-owners · https://www.lendingtree.com/business/small/best-places-for-boomer-entrepreneurs/
+      </p>
+    </details>
+  </section>
+
+</div>
+
+<footer>Companion to <i>Reno Competitive Landscape Analysis.md</i> &amp; the Competitive Landscape Dashboard · Spectrum Reach MR&amp;I Reno sub-team · public sources only, no confidential data · facts, analyst inferences, and verify-flags are labeled throughout.</footer>
+
+<script>
+const FONT="-apple-system,Segoe UI,Roboto,sans-serif";
+Chart.defaults.color="#9aa7b4"; Chart.defaults.font.family=FONT; Chart.defaults.font.size=12;
+const grid={color:"#2d3441"};
+const noLegend={plugins:{legend:{display:false}}};
+
+// 1 — local digital vs traditional
+new Chart(c1,{type:'doughnut',
+  data:{labels:['Digital  $89B (52%)','Traditional  $82B (48%)'],
+    datasets:[{data:[52,48],backgroundColor:['#1d9bf0','#ff9f40'],borderColor:'#0d1117',borderWidth:3}]},
+  options:{plugins:{legend:{position:'bottom'}},cutout:'58%'}});
+
+// 2 — linear vs CTV share of local TV-set spend, 2024 vs 2026
+new Chart(c2,{type:'bar',
+  data:{labels:['2024','2026'],
+    datasets:[
+      {label:'Linear/broadcast TV',data:[86,81],backgroundColor:'#ff6384'},
+      {label:'CTV / streaming',data:[14,19],backgroundColor:'#5fd38d'}]},
+  options:{responsive:true,scales:{x:{stacked:true,grid},y:{stacked:true,grid,ticks:{callback:v=>v+'%'},max:100}},
+    plugins:{legend:{position:'bottom'}}}});
+
+// 3 — SMB channel usage
+new Chart(c3,{type:'bar',
+  data:{labels:['Facebook','Instagram','Search / Google','Email','Local broadcast/cable TV','Radio'],
+    datasets:[{data:[83,60,55,45,22,18],
+      backgroundColor:['#1d9bf0','#1d9bf0','#1d9bf0','#1d9bf0','#ff9f40','#ff9f40']}]},
+  options:{indexAxis:'y',...noLegend,
+    scales:{x:{grid,ticks:{callback:v=>v+'%'},max:100},y:{grid:{display:false}}}}});
+
+// 4 — median age comparison
+new Chart(c4,{type:'bar',
+  data:{labels:['Washoe (Reno)','Nevada','United States'],
+    datasets:[{data:[38.9,38.3,38.5],backgroundColor:['#1d9bf0','#3a4756','#3a4756']}]},
+  options:{...noLegend,scales:{y:{grid,min:30,max:45,title:{display:true,text:'Median age (years)'}},x:{grid:{display:false}}}}});
+
+// 5 — owner age brackets
+new Chart(c5,{type:'bar',
+  data:{labels:['Under 55','55–64','65+'],
+    datasets:[{data:[47.7,29.5,22.8],backgroundColor:['#3a4756','#ff9f40','#ff6384']}]},
+  options:{...noLegend,scales:{y:{grid,ticks:{callback:v=>v+'%'},max:60},x:{grid:{display:false}}},
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y+'% of US business owners'}}}}});
+</script>
+</body>
+</html>
